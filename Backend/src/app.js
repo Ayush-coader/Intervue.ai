@@ -9,7 +9,8 @@ const app = express()
 app.set('trust proxy', 1)
 
 const allowedOrigins = [
-    "https://intervue-ai-theta.vercel.app"
+    "https://intervue-ai-theta.vercel.app",
+    "https://intervue-ai-0uk6.onrender.com"
 ]
 
 app.use(cors({
