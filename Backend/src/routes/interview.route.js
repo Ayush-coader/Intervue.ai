@@ -11,7 +11,26 @@ const interviewRouter= express.Router()
  * @access private
  */
 
-interviewRouter.post("/",authmiddleware.authuser, upload.single("resume") ,interviewcontroller.generateInterViewReportController)
+const multer = require("multer")
+
+/**
+ * Wraps multer upload to catch file validation errors (wrong type, size exceeded)
+ * and return a proper 400 response instead of silently dropping req.file.
+ */
+function handleResumeUpload(req, res, next) {
+    upload.single("resume")(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            // e.g. LIMIT_FILE_SIZE
+            return res.status(400).json({ message: `File upload error: ${err.message}` })
+        } else if (err) {
+            // e.g. "Only PDF files are allowed"
+            return res.status(400).json({ message: err.message })
+        }
+        next()
+    })
+}
+
+interviewRouter.post("/", authmiddleware.authuser, handleResumeUpload, interviewcontroller.generateInterViewReportController)
 
 /**
  * @route GET/api/interview/report/:interviewId

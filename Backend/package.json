@@ -14,21 +14,18 @@
   "license": "ISC",
   "dependencies": {
     "@google/genai": "^2.8.0",
-    "@openrouter/sdk": "^0.12.79",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "dotnet": "^1.1.4",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.3",
     "multer": "^2.1.1",
     "nodemon": "^3.1.14",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse": "^1.1.1",
     "puppeteer": "^25.1.0",
-    "react-router": "^7.18.0",
     "zod": "^4.4.3",
     "zod-to-json-schema": "^3.25.2"
   }

@@ -1,20 +1,19 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL:"https://ai-report-generator-lq10.onrender.com",
+    baseURL:"http://localhost:3000",
     withCredentials:true
 })
 
 export const generateInterviewReport = async ({resumeFile,jobDescription,selfDescription})=>{
     const formData= new FormData()
-    formData.append("resume",resumeFile)
+    // Only append resume if it's a valid file — never append undefined
+    if (resumeFile instanceof File || resumeFile instanceof Blob) {
+        formData.append("resume", resumeFile)
+    }
     formData.append("jobDescription",jobDescription)
     formData.append("selfDescription",selfDescription)
-    const response= await api.post("/api/interview",formData,{
-        headers:{
-            "Content-Type":"multipart/form-data"
-        }
-    })
+    const response= await api.post("/api/interview",formData)
     return response.data
 }
 

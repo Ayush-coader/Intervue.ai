@@ -1,0 +1,408 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// LoadingScreen.scss  –  Full-screen AI report generation loading overlay
+// Matches the global dark-purple / indigo design system (--bg-dark: #08080e)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+.ls-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #08080e;
+  overflow: hidden;
+}
+
+/* ── Ambient orbs ─────────────────────────────────────────────────────────── */
+.ls-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: lsOrbFloat 9s ease-in-out infinite alternate;
+
+  &--purple {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+    top: -160px;
+    left: -120px;
+    animation-duration: 11s;
+  }
+
+  &--indigo {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
+    bottom: -100px;
+    right: -80px;
+    animation-duration: 13s;
+    animation-direction: alternate-reverse;
+  }
+
+  &--cyan {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    animation-duration: 8s;
+  }
+}
+
+@keyframes lsOrbFloat {
+  from { transform: translate(0, 0)   scale(1); }
+  to   { transform: translate(30px, -25px) scale(1.06); }
+}
+
+/* ── Subtle dot-grid noise ────────────────────────────────────────────────── */
+.ls-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.ls-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  margin: 1rem;
+  padding: 2.25rem 2.5rem 2rem;
+  background: rgba(15, 14, 23, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, 0.12),
+    0 32px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(139, 92, 246, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: lsCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lsCardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.ls-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.ls-logo-ring {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ls-logo-spinner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: lsSpin 2s linear infinite;
+}
+
+@keyframes lsSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.ls-logo-icon {
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: lsPulse 2s ease-in-out infinite;
+}
+
+@keyframes lsPulse {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1; }
+}
+
+.ls-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ls-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.ls-subtitle {
+  font-size: 0.83rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+.ls-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ls-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 99px;
+  position: relative;
+  overflow: visible;
+}
+
+.ls-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.ls-progress-glow {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  filter: blur(8px);
+  opacity: 0.7;
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.ls-progress-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #8b5cf6;
+  min-width: 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Steps list ───────────────────────────────────────────────────────────── */
+.ls-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ls-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, opacity 0.3s ease;
+
+  &--done {
+    opacity: 0.55;
+  }
+
+  &--active {
+    background: rgba(139, 92, 246, 0.07);
+    border: 1px solid rgba(139, 92, 246, 0.18);
+  }
+
+  &--pending {
+    opacity: 0.3;
+  }
+}
+
+/* shimmer sweep on active step */
+.ls-step-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.07) 45%,
+    rgba(99, 102, 241, 0.06) 55%,
+    transparent 100%
+  );
+  background-size: 250% 100%;
+  animation: lsShimmer 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes lsShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Step icon area ───────────────────────────────────────────────────────── */
+.ls-step-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.ls-check {
+  width: 20px;
+  height: 20px;
+}
+
+/* Pulsing dot for active state */
+.ls-dot-pulse {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.25);
+    animation: lsDotRipple 1.4s ease-out infinite;
+  }
+}
+
+@keyframes lsDotRipple {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.ls-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+  animation: lsDotBeat 1s ease-in-out infinite alternate;
+
+  &--idle {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+    animation: none;
+  }
+}
+
+@keyframes lsDotBeat {
+  from { transform: scale(0.85); opacity: 0.7; }
+  to   { transform: scale(1.1);  opacity: 1; }
+}
+
+/* ── Step text ────────────────────────────────────────────────────────────── */
+.ls-step-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.ls-step-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  line-height: 1.3;
+
+  .ls-step--done & {
+    color: #94a3b8;
+  }
+
+  .ls-step--pending & {
+    color: #475569;
+  }
+}
+
+.ls-step-detail {
+  font-size: 0.75rem;
+  color: #8b5cf6;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+/* ── Tip rotator ──────────────────────────────────────────────────────────── */
+.ls-tip-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  border-radius: 12px;
+}
+
+.ls-tip-icon {
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ls-tip-text {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.55;
+
+  &.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+  }
+}
+
+/* ── Footer note ──────────────────────────────────────────────────────────── */
+.ls-footer-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #475569;
+  line-height: 1.5;
+
+  strong {
+    color: #64748b;
+  }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .ls-card {
+    padding: 1.75rem 1.5rem 1.5rem;
+    gap: 1.4rem;
+    border-radius: 20px;
+    margin: 0.75rem;
+  }
+
+  .ls-title {
+    font-size: 1.1rem;
+  }
+
+  .ls-step {
+    padding: 0.55rem 0.7rem;
+  }
+}

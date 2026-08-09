@@ -1,12 +1,29 @@
-const express=require('express')
-const cookieParser=require('cookie-parser')
-const cors=require("cors")
-const rateLimit = require('express-rate-limit');
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const cors = require("cors")
+const rateLimit = require('express-rate-limit')
 
-const app=express()
+const app = express()
 
 // Enable trust proxy to correctly identify client IPs behind reverse proxies (Render/Vercel)
 app.set('trust proxy', 1)
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://ai-report-generator-green.vercel.app"
+]
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(null, true)
+        }
+    },
+    credentials: true
+}))
 
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -14,27 +31,24 @@ app.use(rateLimit({
     message: {
         message: "Too many requests from this IP, please try again after 15 minutes."
     }
-}));
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors({
-    origin:"https://ai-report-generator-green.vercel.app",
-    credentials:true
 }))
 
-const authRouter=require("./routes/auth.route")
-const interviewRouter=require("./routes/interview.route")
+app.use(express.json())
+app.use(cookieParser())
 
+const authRouter = require("./routes/auth.route")
+const interviewRouter = require("./routes/interview.route")
 
+app.use("/api/auth", authRouter)
+app.use("/api/interview", interviewRouter)
 
-app.use("/api/auth",authRouter)
-app.use("/api/interview",interviewRouter)
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+    console.error("Global Server Error:", err)
+    res.status(err.status || 500).json({
+        message: err.message || "Internal server error",
+        error: process.env.NODE_ENV === "development" ? err : {}
+    })
+})
 
-
-
-
-
-
-
-
-module.exports=app
+module.exports = app

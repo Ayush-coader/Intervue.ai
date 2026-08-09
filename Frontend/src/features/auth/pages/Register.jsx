@@ -1,50 +1,130 @@
 import { useState } from 'react'
-import { useNavigate,Link } from 'react-router'; 
-import { useAuth } from '../hooks/useAuth';
+import { useNavigate, Link } from 'react-router'
+import { useAuth } from '../hooks/useAuth'
+import { Sparkles, User, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import '../auth.form.scss'
 
 function Register() {
-    const navigate= useNavigate()
-    const {loading,handleregister}= useAuth()
+  const navigate = useNavigate()
+  const { loading, handleregister } = useAuth()
 
-    const [username,setusername]=useState("")
-    const [email,setemail]=useState("")
-    const [password,setpassword]=useState("")
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handlesubmit=async(e)=>{
-        e.preventDefault();
-        await handleregister({ username, email, password })
-        navigate('/')
+  const handlesubmit = async (e) => {
+    e.preventDefault()
+    if (!username || !email || !password) return
+    setIsSubmitting(true)
+    try {
+      await handleregister({ username, email, password })
+      navigate('/')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsSubmitting(false)
     }
-    if(loading){
-        return (<main><h1>loading......</h1></main>)
-    }
+  }
+
   return (
-    <main>
-        <div className="form-container">
-            <h1>Register</h1>
-            <form onSubmit={handlesubmit}>
-                <div className="input-section">
-                    <label htmlFor="username">UserName</label>
-                    <input
-                    onChange={(e)=>{setusername(e.target.value)}} 
-                    type="text" id="username" name='username' placeholder="Enter your Username" />
-                </div>
-                <div className="input-section">
-                    <label htmlFor="email">Email</label>
-                    <input 
-                    onChange={(e)=>{setemail(e.target.value)}} 
-                    type="email" id="email" name='email' placeholder="Enter your Email" />
-                </div>
-                <div className="input-section">
-                    <label htmlFor="password">Password</label>
-                    <input 
-                    onChange={(e)=>{setpassword(e.target.value)}} 
-                    type="password" id="password" name='password' placeholder="Enter your Password" />
-                </div>
-                <button className='btn btn-primary' type="submit">Register</button>
-            </form>
-            <p>Already have account? <Link to={"/login"}>login</Link></p>
+    <main className="auth-page-container fade-in">
+      {/* Glow Orbs */}
+      <div className="auth-glow-orb orb-left"></div>
+      <div className="auth-glow-orb orb-right"></div>
+
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo-badge">
+            <Sparkles size={24} />
+          </div>
+          <h1>Create Account</h1>
+          <p>Get personalized AI interview prep, question guides & day-by-day roadmaps</p>
         </div>
+
+        <form onSubmit={handlesubmit}>
+          <div className="input-section">
+            <label htmlFor="username">Full Name / Username</label>
+            <div className="input-field-wrapper">
+              <User className="input-icon" size={18} />
+              <input
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Alex Morgan"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="input-section">
+            <label htmlFor="email">Email Address</label>
+            <div className="input-field-wrapper">
+              <Mail className="input-icon" size={18} />
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                type="email"
+                id="email"
+                name="email"
+                placeholder="name@company.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="input-section">
+            <label htmlFor="password">Password</label>
+            <div className="input-field-wrapper">
+              <Lock className="input-icon" size={18} />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            className="btn-submit"
+            type="submit"
+            disabled={loading || isSubmitting}
+          >
+            {loading || isSubmitting ? (
+              <>
+                <span className="spinner-sm"></span>
+                <span>Creating account...</span>
+              </>
+            ) : (
+              <>
+                <span>Get Started</span>
+                <ArrowRight size={18} />
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Already have an account? <Link to="/login">Sign In</Link>
+          </p>
+        </div>
+      </div>
     </main>
   )
 }
