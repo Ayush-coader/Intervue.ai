@@ -257,11 +257,7 @@ Contributions, bug reports, and suggestions are welcome.
 4. Push the branch: `git push origin feature/your-feature`.
 5. Open a Pull Request describing the change.
 
-## License
 
-No repository-level license was identified in the supplied project files. Unless a license is added, the project should be treated as **all rights reserved**. Add a `LICENSE` file if you want to explicitly permit reuse or contributions under particular terms.
-
----
 
 <p align="center">
   Built by <a href="https://github.com/Ayush-coader">Ayush Katiyar</a>
